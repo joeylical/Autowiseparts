@@ -1,0 +1,26 @@
+Environment Setup for Autowise Parts E-Commerce Application:
+
+1.  Install Node.js and npm:
+    * Download and install Node.js from [nodejs.org](https://nodejs.org).
+    * npm is included with Node.js.
+
+2.  Install Git (optional):
+    * Download and install Git from [git-scm.com](https://git-scm.com).
+
+3.  Clone the repository (if applicable):
+    * If you have a Git repository, clone it to your local machine.
+
+4.  Navigate to the project directories:
+    * Open your terminal or command prompt.
+    * Navigate to the `client` directory: `cd AutowiseParts/client`.
+    * Navigate to the `server` directory: `cd AutowiseParts/server`.
+
+5.  Install dependencies:
+    * In both the `client` and `server` directories, run `npm install`.
+
+6.  Start the application:
+    * In the `server` directory, run `npm start`.
+    * In the `client` directory, run `npm start`.
+
+7.  Access the application:
+    * Open your web browser and go to `http://localhost:3000`.
