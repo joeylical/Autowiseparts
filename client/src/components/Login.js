@@ -1,17 +1,23 @@
+
 // client/src/components/Login.js
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(''); // New state for error message
   const history = useHistory();
+  const { login } = useAuth();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Simulate login
-    if (username && password) {
+    try {
+      await login(username, password);
       history.push('/');
+    } catch (err) {
+      setError('Login failed. Please check your credentials and try again.'); // Set error message
     }
   };
 
@@ -29,6 +35,8 @@ function Login() {
         </div>
         <button type="submit">Login</button>
       </form>
+      {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message */}
+      <p>Don't have an account? <a href="/register">Register here</a></p>
     </div>
   );
 }

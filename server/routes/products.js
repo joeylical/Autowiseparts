@@ -3,9 +3,39 @@ const express = require('express');
 const router = express.Router();
 const products = require('../models/Product');
 
-// Get all products (simulated)
+// Get all products with optional search and filtering
 router.get('/', (req, res) => {
-  res.json(products);
+  const { q, category, minPrice, maxPrice } = req.query;
+  let filteredProducts = [...products]; // Create a mutable copy
+
+  if (q) {
+    const searchTerm = q.toLowerCase();
+    filteredProducts = filteredProducts.filter(p =>
+      p.name.toLowerCase().includes(searchTerm) ||
+      p.description.toLowerCase().includes(searchTerm)
+    );
+  }
+
+  if (category) {
+    filteredProducts = filteredProducts.filter(p =>
+      p.category.toLowerCase() === category.toLowerCase()
+    );
+  }
+
+  if (minPrice) {
+    filteredProducts = filteredProducts.filter(p =>
+      p.price >= parseFloat(minPrice)
+    );
+  }
+
+  if (maxPrice) {
+    filteredProducts = filteredProducts.filter(p =>
+      p.price <= parseFloat(maxPrice)
+    );
+  }
+
+  res.json(filteredProducts);
+  console.log('Products API response:', filteredProducts);
 });
 
 // Get a specific product by ID (simulated)

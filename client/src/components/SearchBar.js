@@ -1,24 +1,27 @@
-// client/src/components/SearchBar.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-function SearchBar() {
-  const [searchTerm, setSearchTerm] = useState('');
+function SearchBar({ onSearch, initialSearchTerm = '' }) {
+  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
+
+  useEffect(() => {
+    setSearchTerm(initialSearchTerm);
+  }, [initialSearchTerm]);
 
   const handleSearch = (e) => {
     e.preventDefault();
-    // Simulate search functionality
-    console.log('Searching for:', searchTerm);
+    onSearch(searchTerm);
   };
 
   return (
-    <form onSubmit={handleSearch} style={{ padding: '10px' }}>
+    <form onSubmit={handleSearch} style={{ marginBottom: '20px' }}>
       <input
         type="text"
         placeholder="Search products..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        style={{ padding: '8px', width: '300px', marginRight: '10px' }}
       />
-      <button type="submit">Search</button>
+      <button type="submit" style={{ padding: '8px 15px', cursor: 'pointer' }}>Search</button>
     </form>
   );
 }

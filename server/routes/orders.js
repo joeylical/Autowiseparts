@@ -3,9 +3,15 @@ const express = require('express');
 const router = express.Router();
 const orders = require('../models/Order');
 
-// Get all orders (simulated)
 router.get('/', (req, res) => {
-  res.json(orders);
+  const { userId } = req.query;
+  if (userId) {
+    const userOrders = orders.filter(order => order.userId === userId);
+    res.json(userOrders);
+  } else {
+    console.log('Backend GET /orders response:', orders);
+    res.json(orders);
+  }
 });
 
 // Get a specific order by ID (simulated)
@@ -21,12 +27,28 @@ router.get('/:id', (req, res) => {
 
 // Create a new order (simulated)
 router.post('/', (req, res) => {
-  const newOrder = {
-    id: orders.length + 1,
-    ...req.body,
-  };
-  orders.push(newOrder);
-  res.status(201).json(newOrder);
+  const { items, totalAmount, shippingAddress, paymentInfo } = req.body;
+
+  // Simulate payment processing
+  const paymentSuccess = Math.random() < 0.8; // 80% success rate
+
+  if (paymentSuccess) {
+    const newOrder = {
+      id: orders.length + 1,
+      userId: req.user ? req.user.id : 'guest', // Assuming user is authenticated, otherwise guest
+      items,
+      totalAmount,
+      shippingAddress,
+      paymentStatus: 'paid',
+      orderStatus: 'pending',
+      createdAt: new Date().toISOString(),
+    };
+    orders.push(newOrder);
+    res.status(201).json({ success: true, order: newOrder, message: 'Order placed successfully' });
+    console.log('Order API response:', newOrder);
+  } else {
+    res.status(400).json({ success: false, message: 'Payment failed. Please try again.' });
+  }
 });
 
 // Update an existing order (simulated)

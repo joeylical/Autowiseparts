@@ -1,16 +1,20 @@
 // client/src/components/Review.js
 import React, { useState } from 'react';
+import api from '../services/api';
 
 function Review() {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate submitting a review
-    console.log('Rating:', rating, 'Comment:', comment);
-    setRating(5);
-    setComment('');
+    try {
+      await api.post('/reviews', { rating, comment });
+      setRating(5);
+      setComment('');
+    } catch (error) {
+      console.error('Error submitting review:', error);
+    }
   };
 
   return (
