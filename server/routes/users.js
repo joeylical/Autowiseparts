@@ -1,7 +1,6 @@
 // server/routes/users.js
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
@@ -9,19 +8,20 @@ const User = require('../models/User');
 router.post('/register', async (req, res) => {
   const { username, password, email } = req.body;
   try {
-    let user = await User.findOne({ username });
+    let user = User.find(u => u.username === username);
     if (user) {
       return res.status(400).json({ msg: 'User already exists' });
     }
-    user = new User({
+    const newUser = {
+      id: User.length + 1,
       username,
       password,
       email,
-    });
-    await user.save();
+    };
+    User.push(newUser);
     const payload = {
       user: {
-        id: user.id,
+        id: newUser.id,
       },
     };
     jwt.sign(
@@ -40,14 +40,14 @@ router.post('/register', async (req, res) => {
 });
 
 // Login a user
-router.post('/login', async (req, res) => {
+router.post('/login', (req, res) => {
   const { username, password } = req.body;
   try {
-    let user = await User.findOne({ username });
+    let user = User.find(u => u.username === username);
     if (!user) {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = password === user.password;
     if (!isMatch) {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
@@ -62,7 +62,7 @@ router.post('/login', async (req, res) => {
       { expiresIn: 3600 },
       (err, token) => {
         if (err) throw err;
-        res.json({ token });
+        res.json({ token, username: user.username });
       }
     );
   } catch (err) {

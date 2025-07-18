@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const orders = require('../models/Order');
+const products = require('../models/Product'); // Import products model
 
 router.get('/', (req, res) => {
   const { userId } = req.query;
@@ -29,10 +30,24 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   const { items, totalAmount, shippingAddress, paymentInfo } = req.body;
 
+  // Check inventory before processing payment
+  for (const item of items) {
+    const product = products.find(p => p.id === item.productId);
+    if (!product || product.inventory < item.quantity) {
+      return res.status(400).json({ success: false, message: `Not enough stock for ${item.name}` });
+    }
+  }
+
   // Simulate payment processing
   const paymentSuccess = Math.random() < 0.8; // 80% success rate
 
   if (paymentSuccess) {
+    // Decrement inventory
+    for (const item of items) {
+      const product = products.find(p => p.id === item.productId);
+      product.inventory -= item.quantity;
+    }
+
     const newOrder = {
       id: orders.length + 1,
       userId: req.user ? req.user.id : 'guest', // Assuming user is authenticated, otherwise guest

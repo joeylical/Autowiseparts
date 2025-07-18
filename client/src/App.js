@@ -21,9 +21,9 @@ function App() {
           <Switch>
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
-            <Route path="/" exact component={Home} />
-            <Route path="/products" component={ProductList} />
-            <Route path="/product/:id" component={ProductDetail} />
+            <PrivateRoute path="/" exact component={Home} />
+            <PrivateRoute path="/products" component={ProductList} />
+            <PrivateRoute path="/product/:id" component={ProductDetail} />
             <PrivateRoute path="/cart" component={Cart} />
             <PrivateRoute path="/checkout" component={Checkout} />
             <PrivateRoute path="/order/:id" component={OrderTracking} />

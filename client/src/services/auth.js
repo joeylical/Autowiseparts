@@ -13,12 +13,17 @@ export const login = async (username, password) => {
     const res = await api.post('/users/login', { username, password });
     if (res.data.token) {
       localStorage.setItem('token', res.data.token);
+      localStorage.setItem('username', res.data.username); // Store username
     }
     return res.data;
   } catch (error) {
     console.error('Login failed:', error);
     throw error; // Re-throw to be caught by the component
   }
+};
+
+export const getCurrentUsername = () => {
+  return localStorage.getItem('username');
 };
 
 export const logout = () => {

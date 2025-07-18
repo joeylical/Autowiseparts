@@ -1,16 +1,13 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { getCurrentUser, login as authLogin, logout as authLogout } from '../services/auth';
+import { getCurrentUser, login as authLogin, logout as authLogout, getCurrentUsername } from '../services/auth';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!getCurrentUser());
 
   useEffect(() => {
-    // Check for token on initial load
-    if (getCurrentUser()) {
-      setIsAuthenticated(true);
-    }
+    // No need to check here, as useState already does it
   }, []);
 
   const login = async (username, password) => {
@@ -30,7 +27,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, getCurrentUsername }}>
       {children}
     </AuthContext.Provider>
   );

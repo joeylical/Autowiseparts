@@ -130,6 +130,8 @@ function ProductList() {
               <div>
                 <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: '#007bff', fontWeight: 'bold' }}>{product.name}</Link>
                 <p style={{ margin: '5px 0' }}>${product.price}</p>
+                <p style={{ margin: '5px 0', fontSize: '0.9em', color: '#777' }}>Rating: {product.reviews && product.reviews.length > 0 ? product.rating.toFixed(2) : '--'}</p>
+                <p style={{ margin: '5px 0', fontSize: '0.9em', color: '#777' }}>In Stock: {product.inventory}</p>
                 <p style={{ fontSize: '0.9em', color: '#555' }}>{product.description.substring(0, 100)}...</p>
               </div>
             </li>

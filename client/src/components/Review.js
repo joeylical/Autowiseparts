@@ -1,42 +1,17 @@
-// client/src/components/Review.js
-import React, { useState } from 'react';
-import api from '../services/api';
+import React from 'react';
 
-function Review() {
-  const [rating, setRating] = useState(5);
-  const [comment, setComment] = useState('');
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await api.post('/reviews', { rating, comment });
-      setRating(5);
-      setComment('');
-    } catch (error) {
-      console.error('Error submitting review:', error);
-    }
-  };
-
+function Review({ review }) {
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Leave a Review</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Rating:</label>
-          <select value={rating} onChange={(e) => setRating(e.target.value)}>
-            <option value="1">1 Star</option>
-            <option value="2">2 Stars</option>
-            <option value="3">3 Stars</option>
-            <option value="4">4 Stars</option>
-            <option value="5">5 Stars</option>
-          </select>
-        </div>
-        <div>
-          <label>Comment:</label>
-          <textarea value={comment} onChange={(e) => setComment(e.target.value)} />
-        </div>
-        <button type="submit">Submit Review</button>
-      </form>
+    <div style={{ 
+      border: '1px solid #ddd', 
+      borderRadius: '8px', 
+      padding: '15px', 
+      marginBottom: '15px',
+      backgroundColor: '#f9f9f9'
+    }}>
+      <p style={{ margin: '0 0 5px 0', fontWeight: 'bold' }}>{review.author}</p>
+      <p style={{ margin: '0 0 10px 0', color: '#555' }}>Rating: {review.rating}</p>
+      <p style={{ margin: '0' }}>{review.comment}</p>
     </div>
   );
 }
